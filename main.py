@@ -113,7 +113,7 @@ for i, feature in enumerate(feature_cols):
         norm_class_1[feature]
     ]
 
-    ax.boxplot(data_to_plot, labels=['Tumor Type 0', 'Tumor Type 1'])
+    ax.boxplot(data_to_plot, tick_labels=['Tumor Type 0', 'Tumor Type 1'])
     ax.set_title(feature)
     ax.set_xticks([1, 2])
     ax.set_ylabel('Mean (normalized)')
@@ -121,3 +121,23 @@ for i, feature in enumerate(feature_cols):
 fig.suptitle('Mean of Each Feature by Tumor Type (Class 0 vs Class 1)', fontsize=14)
 plt.tight_layout(rect=[0, 0, 1, 0.95])
 plt.show()
+
+# -----------------------------Task 6 - Mini Report-----------------------------
+print('\nTask 6 - Mini-Report')
+
+print(
+    '1.) Feature with very similar distributions between Class 0 and Class 1:\n'
+        'The boxplots for Feature 5 and Feature 9 show a lot of overlap between the\n'
+        'two classes and relatively small differences in their mean values. These\n'
+        'features do not seperate the classes very clearly'
+)
+
+print('\n')
+
+print(
+    '2.) Features that best distinguish between Class 0 and Class 1:\n'
+        'Features 2, 3, 6 and 9 show the largest mean differences and the\n'
+        'clearest vertical seperation between the boxplots. For these features,\n'
+        'the Class 1 box is consistenly shifted upward relative to Class 0 with\n'
+        'less overlap, so they appear most effective for distinguishing the tumor types.'
+)
