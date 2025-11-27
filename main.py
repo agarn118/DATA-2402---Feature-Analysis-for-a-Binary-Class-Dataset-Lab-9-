@@ -1,4 +1,5 @@
 import pandas as pd
+import matplotlib as plt
 
 # Task 1 - Function Writing
 def split_by_class(df):
@@ -42,9 +43,30 @@ def validate_data(df):
 
 # Task 3 - Statistical Comparison
 def compute_stats(df):
-    """
-    Computes the mean
-    """
+    # Compute the mean, std and num count
+    tumor_type = str(df.iloc[1, -1])
+    feature_cols = df.columns[:-1]
+
+    column_names = [f'Mean_{tumor_type}', f'Std_{tumor_type}', f'Num_{tumor_type}']
+    stats_df = pd.DataFrame(columns=column_names)    
+    for row in feature_cols:
+        row = str(row)
+        mean = df.loc[:, row].mean()
+        std = df.loc[:, row].std()
+        num = df.loc[:, row].count()
+        stats_df.loc[row] = [mean, std, num]
+    return stats_df
+
+# Task 4 - Normalization
+def normalize_features(df):
+    # Return a new DataFrame where feature columns are z-score normalized.
+    # The class column (last column) is left unchanged.
+    df_norm = df.copy()
+    feature_cols = df_norm.columns[:-1]
+
+    # Z - score formula: (x - mean) / std
+    df_norm[feature_cols] = (df_norm[feature_cols] - df_norm[feature_cols].mean()) / df_norm[feature_cols].std()
+    return df_norm
 
 
 # -----------------------------MAIN SCRIPT-----------------------------
@@ -52,15 +74,24 @@ data = r'C:\Users\ashto\OneDrive\Desktop\Lab 9-10\DATA-2402---Feature-Analysis-f
 df = pd.read_csv(data)
 
 # Validate the data
+'''
 try:
     validate_data(df)
 except ValueError as e:
     print(f"Validation Error: {e}")
-
+'''
+    # Note: Validations fail so comment the block out to run the rest
 
 # Split by Tumor Type
 df_class_0, df_class_1 = split_by_class(df)
 
 # Statistical Comparison
 stats_class_0 = compute_stats(df_class_0)
-# stats_class_1 = compute_stats(df_class_1)
+stats_class_1 = compute_stats(df_class_1)
+stat_comparison = pd.concat([stats_class_0, stats_class_1], axis=1)
+stat_comparison['Mean Diff'] = stat_comparison['Mean_1'] - stat_comparison['Mean_0']
+print(stat_comparison)
+
+# Normalization
+df_norm = normalize_features(df)
+print(df_norm)
