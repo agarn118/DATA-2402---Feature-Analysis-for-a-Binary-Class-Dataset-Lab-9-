@@ -1,5 +1,5 @@
 import pandas as pd
-import matplotlib as plt
+import matplotlib.pyplot as plt
 
 # Task 1 - Function Writing
 def split_by_class(df):
@@ -70,7 +70,7 @@ def normalize_features(df):
 
 
 # -----------------------------MAIN SCRIPT-----------------------------
-data = r'C:\Users\ashto\OneDrive\Desktop\Lab 9-10\DATA-2402---Feature-Analysis-for-a-Binary-Class-Dataset-Lab-9-\cancer_historical (1).csv'
+data = r'C:\Users\ashto\Desktop\Lab-9\DATA-2402---Feature-Analysis-for-a-Binary-Class-Dataset-Lab-9-\cancer_historical (1).csv'
 df = pd.read_csv(data)
 
 # Validate the data
@@ -94,4 +94,30 @@ print(stat_comparison)
 
 # Normalization
 df_norm = normalize_features(df)
-print(df_norm)
+
+# Split normalized data by Tumor Type
+norm_class_0, norm_class_1 = split_by_class(df_norm)
+feature_cols = df_norm.columns[:-1]
+
+# Task #5 - Create 3x3 grid of subplots
+fig, axes = plt.subplots(3, 3, figsize=(12, 10))
+
+for i, feature in enumerate(feature_cols):
+    row = i // 3
+    col = i % 3
+    ax = axes[row, col]
+    
+    # Data for both the classes
+    data_to_plot = [
+        norm_class_0[feature],
+        norm_class_1[feature]
+    ]
+
+    ax.boxplot(data_to_plot, labels=['Tumor Type 0', 'Tumor Type 1'])
+    ax.set_title(feature)
+    ax.set_xticks([1, 2])
+    ax.set_ylabel('Mean (normalized)')
+
+fig.suptitle('Mean of Each Feature by Tumor Type (Class 0 vs Class 1)', fontsize=14)
+plt.tight_layout(rect=[0, 0, 1, 0.95])
+plt.show()
